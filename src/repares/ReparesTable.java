@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by ПКПК on 13.06.2017.
  */
-public class ReparesTable extends JFrame {
+public class ReparesTable extends JFrame implements TableModelListener {
 
     private Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
     private JButton buttonAdd = new JButton("Добавить");
@@ -31,19 +31,15 @@ public class ReparesTable extends JFrame {
 
     public ReparesTable(){
 
-        tableModel.setColumnIdentifiers(repData.getReparesNamesColumns());
-        columnCount = repData.getRepares("repares").length;
-        for (int i = 0; i < columnCount; i++) {
-            tableModel.addRow(repData.getRepares("repares")[i]);
-        }
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
+//        tableModel.setColumnIdentifiers(repData.getReparesNamesColumns());
+//        columnCount = repData.getRepares("repares").length;
+//        for (int i = 0; i < columnCount; i++) {
+//            tableModel.addRow(repData.getRepares("repares")[i]);
+//
+//        }
+        tableModel.addTableModelListener(this);
 
-                columnCount = repData.getRepares("repares").length;
-                tableModel.addRow(repData.getRepares("repares")[columnCount - 1]);
-            }
-        });
+
 
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -131,4 +127,14 @@ public class ReparesTable extends JFrame {
         });
     }
 
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        int row = e.getFirstRow();
+        int column = e.getColumn();
+        ReparesTableModel model = (ReparesTableModel)e.getSource();
+        String columnName = model.getColumnName(column);
+        Object data = model.getValueAt(row, column);
+        this.repaint();
+
+    }
 }
